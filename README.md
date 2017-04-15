@@ -15,8 +15,6 @@ Ansible role Duply
 #         GPG_KEY: '_KEY_ID_'  # Use GPG KEY or PW
 #         GPG_PW: <Very secret password>
 #         TARGET: 's3://s3-<region endpoint name>.amazonaws.com/<bucket name>/<folder name>'
-#         TARGET_USER: '<your AWS access key ID>'
-#         TARGET_PASS: '<your AWS secret key>'
 #         SOURCE: '/' # Backup entire filesystem
 #         MAX_AGE: 6M  # 6 months
 #       excludes:
@@ -47,4 +45,17 @@ Ansible role Duply
    - role: duplicity
      duplicity_configs:
        - name: test
+```
+
+## Configuring AWS credentials (only required for S3 backup)
+```
+- name: Install AWS credentials for Duplycity/Boto
+  copy:
+    dest: /root/.boto
+    content: |
+      [Credentials]
+      aws_access_key_id = {{ aws_access_key_id }}
+      aws_secret_access_key = {{ aws_secret_access_key }}
+  tags:
+    - duplicity
 ```

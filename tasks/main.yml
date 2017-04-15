@@ -3,7 +3,6 @@
 - name: Configure the Duplicity APT repository
   apt_repository:
     repo: ppa:duplicity-team/ppa
-    codename: "{{ ansible_distribution_release }}"
     state: present
   tags:
     - duplicity
@@ -12,10 +11,10 @@
   apt:
     name: "{{ item }}"
     state: present
-    with_items:
-      - duplicity
-      - duply
-      - python-boto
+  with_items:
+    - duplicity
+    - duply
+    - python-boto
   tags:
     - duplicity
 
@@ -40,7 +39,7 @@
     - duplicity
 
 - name: Configure backups
-  include: configure_backups.yml
+  include: configure_backup.yml
   with_items: "{{ duplicity_configs }}"
   tags:
     - duplicity

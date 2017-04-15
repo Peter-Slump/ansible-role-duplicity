@@ -1,5 +1,10 @@
 ---
 
+- name: configure backup | Create config folder
+  file:
+    state: directory
+    path: /etc/duply
+
 - name: configure backup | {{ item.name }} | Initiate config
   command: "duply {{ item.name }} create"
   args:
@@ -11,7 +16,7 @@
 
 - name: configure backup | {{ item.name }} | Update config
   lineinfile:
-    path: "/etc/duply/{{ item.name }}/conf"
+    dest: "/etc/duply/{{ item.name }}/conf"
     regexp: '^{{ setting.key }}='
     line: '{{ setting.key }}={{ setting.value }}'
   become: True
@@ -24,7 +29,7 @@
 
 - name: configure backup | {{ item.name }} | Excludes
   template:
-    src: excludes.j2
+    src: exclude.j2
     dest: "/etc/duply/{{ item.name }}/exclude"
   become: True
   tags:
@@ -37,7 +42,6 @@
     hour: 4
     minute: 0
     job: 'duply {{ item.name }} backup'
-    cron_file: 'duply_backup_{{ item.name }}'
   tags:
     - duplicity
     - configure_backup
