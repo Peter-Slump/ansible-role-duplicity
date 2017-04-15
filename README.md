@@ -1,6 +1,6 @@
 # Ansible role Duply (Duplicity)
 
-Version: 0.0.0
+Version: 0.0.1
 
 Supported OS: Ubuntu
 
