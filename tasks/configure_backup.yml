@@ -1,9 +1,12 @@
 ---
 
-- name: configure backup | Create config folder
+- name: configure backup | {{ item.name }} | Create config folder
   file:
     state: directory
     path: /etc/duply
+  tags:
+    - duplicity
+    - configure_backup
 
 - name: configure backup | {{ item.name }} | Initiate config
   command: "duply {{ item.name }} create"
@@ -15,14 +18,9 @@
     - configure_backup
 
 - name: configure backup | {{ item.name }} | Update config
-  lineinfile:
-    dest: "/etc/duply/{{ item.name }}/conf"
-    regexp: '^{{ setting.key }}='
-    line: '{{ setting.key }}={{ setting.value }}'
-  become: True
-  with_dict: "{{ item.settings }}"
-  loop_control:
-    loop_var: setting
+  template:
+      src: conf.j2
+      dest: "/etc/duply/{{ item.name }}/conf"
   tags:
     - duplicity
     - configure_backup
@@ -36,12 +34,22 @@
     - duplicity
     - configure_backup
 
-- name: configure backup | {{ item.name }} | Cron
+- name: "configure backup | {{ item.name }} | Cron: backup"
   cron:
     name: 'Duply backup {{ item.name }}'
     hour: 4
     minute: 0
     job: 'duply {{ item.name }} backup'
+  tags:
+    - duplicity
+    - configure_backup
+
+- name: "configure backup | {{ item.name }} | Cron: purge"
+  cron:
+    name: 'Duply full-purge {{ item.name }}'
+    hour: 5
+    minute: 0
+    job: 'duply {{ item.name }} purgeFull --force'
   tags:
     - duplicity
     - configure_backup

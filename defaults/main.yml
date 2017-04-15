@@ -1,9 +1,5 @@
 ---
 
-duplicity_user: duplicity
-duplicity_group: "{{ duplicity_user }}"
-duplicity_home: "/home/{{ duplicity_user }}"
-
 duplicity_configs: []
 
 # Example config

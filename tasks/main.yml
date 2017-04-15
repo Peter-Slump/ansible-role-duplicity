@@ -18,23 +18,8 @@
   tags:
     - duplicity
 
-- name: Create group
-  group:
-    name: "{{ duplicity_group }}"
-    system: yes
-    state: present
-  tags:
-    - duplicity
-
-- name: Create user
-  user:
-    name: "{{ duplicity_user }}"
-    group: "{{ duplicity_group }}"
-    home: "{{ duplicity_home }}"
-    shell: /bin/sh
-    comment: "Duplicity Backup"
-    system: yes
-    state: present
+- debug:
+    var: aws_secret_access_key
   tags:
     - duplicity
 
