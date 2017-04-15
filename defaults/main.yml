@@ -1,13 +1,11 @@
-# Ansible role Duply (Duplicity)
+---
 
-Version: 0.0.0
+duplicity_user: duplicity
+duplicity_group: "{{ duplicity_user }}"
+duplicity_home: "/home/{{ duplicity_user }}"
 
-Supported OS: Ubuntu
+duplicity_configs: []
 
-Ansible role Duply
-
-## Role variables
-```
 # Example config
 # duplicity_configs:
 #     - name: test
@@ -37,14 +35,3 @@ Ansible role Duply
 #         - /var/log
 #         - /var/run
 #         - /var/tmp
-
-```
-
-## Example
-```
-- hosts: all
-  roles:
-   - role: duplicity
-     duplicity_configs:
-       - name: test
-```

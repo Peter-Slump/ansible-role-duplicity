@@ -1,0 +1,46 @@
+---
+
+- name: Configure the Duplicity APT repository
+  apt_repository:
+    repo: ppa:duplicity-team/ppa
+    codename: "{{ ansible_distribution_release }}"
+    state: present
+  tags:
+    - duplicity
+
+- name: Install requirements
+  apt:
+    name: "{{ item }}"
+    state: present
+    with_items:
+      - duplicity
+      - duply
+      - python-boto
+  tags:
+    - duplicity
+
+- name: Create group
+  group:
+    name: "{{ duplicity_group }}"
+    system: yes
+    state: present
+  tags:
+    - duplicity
+
+- name: Create user
+  user:
+    name: "{{ duplicity_user }}"
+    group: "{{ duplicity_group }}"
+    home: "{{ duplicity_home }}"
+    shell: /bin/sh
+    comment: "Duplicity Backup"
+    system: yes
+    state: present
+  tags:
+    - duplicity
+
+- name: Configure backups
+  include: configure_backups.yml
+  with_items: "{{ duplicity_configs }}"
+  tags:
+    - duplicity
